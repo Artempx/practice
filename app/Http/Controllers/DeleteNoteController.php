@@ -8,17 +8,18 @@ use Illuminate\Support\Facades\Validator;
 
 class DeleteNoteController extends Controller
 {
-    public function deleteNote($id)
-{
-    $note = Note::find($id);
+    public function deleteNote(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+        'id' => 'required|integer|exists:notes,id',
+    ]);
 
-    if (!$note) {
-        return response()->json(['error' => 'Note not found'], 404);
+    if($validator->fails()){
+        return response()->json($validator->errors(),422);
     }
-
+    $note = Note::find($request->id);
     $note->delete();
 
     return response()->json(['message' => 'Note deleted'], 200);
-}
-
+    }
 }
