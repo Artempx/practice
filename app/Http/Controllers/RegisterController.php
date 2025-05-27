@@ -20,11 +20,12 @@ public function register(Request $request)
 
     }
     $user= User::create([
-        'fullName' => $request->fullName,
+        'name' => $request->name,
+        'surname' =>$request->surname,
+        'middlename' =>$request->middlename,
         'nickname' => $request->nickname,
         'gender' => $request->gender,
         'country' => $request->country,
-        'timeZone' => $request->timeZone,
         'email' => $request->email,
         'password' => Hash::make($request->password),
     ]);
