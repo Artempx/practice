@@ -21,9 +21,9 @@ public function login(Request $request)
     $user = User::where('email', $request->email)->first();
 
     if (!$user || !Hash::check($request->password, $user->password)) {
-        return response()->json(['error' => 'Неверный логин или пароль'], 401);
+        return response()->json(['error' => 'Invalid login or password'], 401);
     }
 
-    return response()->json(['message' => 'Вход выполнен успешно'], 200);
+    return response()->json(['message' => 'Login Succesfull'], 200);
 }
 }
