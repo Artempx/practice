@@ -4,26 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class EditNoteController extends Controller
 {
-    public function editNote(Request $request)
+    public function editNote(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-        'id' => 'required|integer|exists:notes,id',
-        'text' => 'required|string',
-        'date' => 'required|date',
-    ]);
+        $note = Note::find($id);
 
-    if($validator->fails()){
-        return response()->json($validator->errors(),422);
-    }
-    $note = Note::find($request->id);
-    $note->text = $request->text;
-    $note->date = $request->date;
-    $note->save();
+        if (!$note) {
+            return response()->json(['error' => 'Note not found'], 404);
+        }
 
-    return response()->json(['message' => 'Note edited'], 200);
+        
+        if ($request->has('text')) {
+            $request->validate(['text' => 'string']);
+            $note->text = $request->text;
+        }
+
+        if ($request->has('date')) {
+            $request->validate(['date' => 'date']);
+            $note->date = $request->date;
+        }
+
+        $note->save();
+
+        return response()->json(['message' => 'Note updated'], 200);
     }
 }
